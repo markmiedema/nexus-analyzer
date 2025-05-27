@@ -1,1 +1,17 @@
 # paste state thresholds here
+# src/config/state_config.yaml
+CA:
+  sales_threshold: 500000
+  transaction_threshold: null
+  lookback_rule: rolling_12m
+  marketplace_threshold_inclusion: false
+  tax_rate: 0.0725
+
+TX:
+  sales_threshold: 500000
+  transaction_threshold: null
+  lookback_rule: rolling_12m
+  marketplace_threshold_inclusion: false
+  tax_rate: 0.0625
+
+DEFAULT: {}       # ignored by loader
