@@ -1,63 +1,141 @@
-# paste state thresholds here
 # src/config/state_config.yaml
-# src/config/state_config.yaml - Add these states for MVP# (These cover 80% of typical client needs)
+# Eight high-impact states seeded for the MVP
+# ── field legend ─────────────────────────────────────────────────────────────
+# sales_threshold / transaction_threshold : economic-nexus triggers
+# lookback_rule  : rolling_12m | calendar_prev_curr (others added later)
+# lookback_details: reserved for future per-state nuances (leave {})
+# marketplace_threshold_inclusion: include marketplace sales in thresholds?
+# tax_rate: base state rate (use avg combined if desired)
+# vda_*  : voluntary disclosure parameters
+# standard_penalty_rate / interest_rate: defaults can be overridden per state
+# quirk_flags: key–value toggles for edge cases
+# effective_date / notes: metadata only
+# ─────────────────────────────────────────────────────────────────────────────
 
 CA:
   sales_threshold: 500000
   transaction_threshold: null
   lookback_rule: rolling_12m
+  lookback_details: {}
   marketplace_threshold_inclusion: false
   tax_rate: 0.0725
-  vda_lookback_cap: 8# quarters
+  vda_lookback_cap: 8        # quarters
+  vda_penalty_waived: null
+  vda_interest_rule: null
   standard_penalty_rate: 0.10
+  interest_rate: 0.06
+  quirk_flags: {}
+  effective_date: "2019-04-01"
+  notes: "Simplified physical-presence rules ignored for MVP"
 
 TX:
   sales_threshold: 500000
   transaction_threshold: null
   lookback_rule: rolling_12m
+  lookback_details: {}
   marketplace_threshold_inclusion: false
   tax_rate: 0.0625
+  vda_lookback_cap: null
+  vda_penalty_waived: null
+  vda_interest_rule: null
+  standard_penalty_rate: 0.10
+  interest_rate: 0.06
+  quirk_flags: {}
+  effective_date: "2019-10-01"
+  notes: null
 
 NY:
   sales_threshold: 500000
   transaction_threshold: 100
-  lookback_rule: rolling_12m# Simplifying from rolling_4q for MVP
+  lookback_rule: rolling_12m   # simplified from rolling_4q for MVP
+  lookback_details: {}
   marketplace_threshold_inclusion: true
-  tax_rate: 0.04
+  tax_rate: 0.0400
+  vda_lookback_cap: null
+  vda_penalty_waived: null
+  vda_interest_rule: null
+  standard_penalty_rate: 0.10
+  interest_rate: 0.06
+  quirk_flags: {}
+  effective_date: "2019-06-21"
+  notes: null
 
 FL:
   sales_threshold: 100000
   transaction_threshold: null
-  lookback_rule: calendar_prev_curr# You support this
+  lookback_rule: calendar_prev_curr
+  lookback_details: {}
   marketplace_threshold_inclusion: true
-  tax_rate: 0.06
+  tax_rate: 0.0600
+  vda_lookback_cap: null
+  vda_penalty_waived: null
+  vda_interest_rule: null
+  standard_penalty_rate: 0.10
+  interest_rate: 0.06
+  quirk_flags: {}
+  effective_date: "2021-07-01"
+  notes: null
 
 WA:
   sales_threshold: 100000
   transaction_threshold: null
   lookback_rule: rolling_12m
+  lookback_details: {}
   marketplace_threshold_inclusion: true
-  tax_rate: 0.065
+  tax_rate: 0.0650
+  vda_lookback_cap: null
+  vda_penalty_waived: null
+  vda_interest_rule: null
+  standard_penalty_rate: 0.10
+  interest_rate: 0.06
+  quirk_flags: {}
+  effective_date: "2018-10-01"
+  notes: null
 
 IL:
   sales_threshold: 100000
   transaction_threshold: 200
-  lookback_rule: rolling_12m# Simplifying from rolling_4q
+  lookback_rule: rolling_12m   # simplified from rolling_4q
+  lookback_details: {}
   marketplace_threshold_inclusion: true
   tax_rate: 0.0625
+  vda_lookback_cap: null
+  vda_penalty_waived: null
+  vda_interest_rule: null
+  standard_penalty_rate: 0.10
+  interest_rate: 0.06
+  quirk_flags: {}
+  effective_date: "2018-10-01"
+  notes: null
 
 PA:
   sales_threshold: 100000
   transaction_threshold: null
   lookback_rule: calendar_prev_curr
+  lookback_details: {}
   marketplace_threshold_inclusion: true
-  tax_rate: 0.06
+  tax_rate: 0.0600
+  vda_lookback_cap: null
+  vda_penalty_waived: null
+  vda_interest_rule: null
+  standard_penalty_rate: 0.10
+  interest_rate: 0.06
+  quirk_flags: {}
+  effective_date: "2018-07-01"
+  notes: null
 
 OH:
   sales_threshold: 100000
   transaction_threshold: 200
   lookback_rule: rolling_12m
+  lookback_details: {}
   marketplace_threshold_inclusion: true
   tax_rate: 0.0575
-
-# Add more as needed, but these 8 states cover most scenarios
+  vda_lookback_cap: null
+  vda_penalty_waived: null
+  vda_interest_rule: null
+  standard_penalty_rate: 0.10
+  interest_rate: 0.06
+  quirk_flags: {}
+  effective_date: "2018-08-01"
+  notes: null
