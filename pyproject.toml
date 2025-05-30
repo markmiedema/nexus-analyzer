@@ -1,27 +1,26 @@
-[project]
+[tool.poetry]
 name = "nexus-analyzer"
 version = "0.1.0"
-description = "\"Sales-Tax nexus detection tool\""
-authors = [
-    {name = "Mark Miedema",email = "markmiedema.career@gmail.com"}
-]
-license = {text = "MIT"}
+description = "Sales-Tax nexus detection tool"
+authors = ["Mark Miedema <markmiedema.career@gmail.com>"]
+license = "MIT"
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = [
-    "typer (>=0.16.0,<0.17.0)",
-    "pandas (>=2.2.3,<3.0.0)",
-    "openpyxl (>=3.1.5,<4.0.0)",
-    "pydantic (>=2.11.5,<3.0.0)",
-    "pyyaml (>=6.0)",
-    "numpy (>=2.2.6,<3.0.0)"
-]
+# homepage = "..."
+# repository = "..."
+# keywords = ["tax", "nexus", "cli"]
 
-
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.poetry.dependencies]
+python = ">=3.13"
+typer = {version = ">=0.16.0,<0.17.0"} # Example if you add specific versioning
+pandas = {version = ">=2.2.3,<3.0.0"}
+# ... other dependencies ...
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
 
+[tool.poetry.scripts]
+nexus-analyzer = "src.cli:cli"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
