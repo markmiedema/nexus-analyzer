@@ -1,11 +1,15 @@
 # paste state thresholds here
 # src/config/state_config.yaml
+# src/config/state_config.yaml - Add these states for MVP# (These cover 80% of typical client needs)
+
 CA:
   sales_threshold: 500000
   transaction_threshold: null
   lookback_rule: rolling_12m
   marketplace_threshold_inclusion: false
   tax_rate: 0.0725
+  vda_lookback_cap: 8# quarters
+  standard_penalty_rate: 0.10
 
 TX:
   sales_threshold: 500000
@@ -14,4 +18,46 @@ TX:
   marketplace_threshold_inclusion: false
   tax_rate: 0.0625
 
-DEFAULT: {}       # ignored by loader
+NY:
+  sales_threshold: 500000
+  transaction_threshold: 100
+  lookback_rule: rolling_12m# Simplifying from rolling_4q for MVP
+  marketplace_threshold_inclusion: true
+  tax_rate: 0.04
+
+FL:
+  sales_threshold: 100000
+  transaction_threshold: null
+  lookback_rule: calendar_prev_curr# You support this
+  marketplace_threshold_inclusion: true
+  tax_rate: 0.06
+
+WA:
+  sales_threshold: 100000
+  transaction_threshold: null
+  lookback_rule: rolling_12m
+  marketplace_threshold_inclusion: true
+  tax_rate: 0.065
+
+IL:
+  sales_threshold: 100000
+  transaction_threshold: 200
+  lookback_rule: rolling_12m# Simplifying from rolling_4q
+  marketplace_threshold_inclusion: true
+  tax_rate: 0.0625
+
+PA:
+  sales_threshold: 100000
+  transaction_threshold: null
+  lookback_rule: calendar_prev_curr
+  marketplace_threshold_inclusion: true
+  tax_rate: 0.06
+
+OH:
+  sales_threshold: 100000
+  transaction_threshold: 200
+  lookback_rule: rolling_12m
+  marketplace_threshold_inclusion: true
+  tax_rate: 0.0575
+
+# Add more as needed, but these 8 states cover most scenarios
