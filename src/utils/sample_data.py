@@ -1,81 +1,117 @@
 # src/utils/sample_data.py
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
 import random
+from datetime import datetime, timedelta
+from typing import List, Optional
+
+import numpy as np
+import pandas as pd
+
 
 class SampleDataGenerator:
-    """Generate realistic test data for development and demos"""
+    """Generate realistic—or intentionally nexus-breaching—sales data."""
 
     @staticmethod
     def generate_realistic_data(
-        start_date: str = '2022-01-01',
-        end_date: str = '2023-12-31',
-        states: list = None,
-        seed: int = 42
+        start_date: str = "2022-01-01",
+        end_date: str = "2023-12-31",
+        states: Optional[List[str]] = None,
+        seed: int = 42,
+        *,
+        force_breach: bool = False,        # ← NEW
     ) -> pd.DataFrame:
-        """Generate realistic e-commerce data"""
         random.seed(seed)
         np.random.seed(seed)
 
         if states is None:
-            states = ['CA', 'TX', 'NY', 'FL', 'IL', 'PA', 'OH', 'WA']
+            states = ["CA", "TX", "NY", "FL", "IL", "PA", "OH", "WA"]
 
         start = pd.to_datetime(start_date)
         end = pd.to_datetime(end_date)
-        dates = pd.date_range(start, end, freq='D')
+        dates = pd.date_range(start, end, freq="D")
 
-        data = []
+        state_factors = {
+            "CA": 2.0,
+            "TX": 1.8,
+            "NY": 1.5,
+            "FL": 1.2,
+            "IL": 1.0,
+            "PA": 0.9,
+            "OH": 0.8,
+            "WA": 1.1,
+        }
 
+        rows = []
+        # ------------------------------------------------------------------
+        # Baseline synthetic data
+        # ------------------------------------------------------------------
         for date in dates:
-# Simulate seasonal patterns
             month = date.month
-            seasonal_factor = 1.0
-            if month in [11, 12]:# Holiday season
-                seasonal_factor = 1.5
-            elif month in [6, 7, 8]:# Summer
-                seasonal_factor = 1.2
+            seasonal = 1.5 if month in (11, 12) else 1.2 if month in (6, 7, 8) else 1.0
 
-# Each state gets different volume
             for state in states:
-# Skip some state/date combinations (not all states every day)
-                if random.random() > 0.7:
+                if random.random() > 0.7:  # skip some combos for realism
                     continue
 
-# Base sales vary by state
-                state_factors = {
-                    'CA': 2.0, 'TX': 1.8, 'NY': 1.5, 'FL': 1.2,
-                    'IL': 1.0, 'PA': 0.9, 'OH': 0.8, 'WA': 1.1
+                factor = state_factors.get(state, 1.0)
+                txns = np.random.poisson(5 * factor)
+                gross = (
+                    sum(np.random.lognormal(3.5, 1.2) for _ in range(txns))
+                    * seasonal
+                    * factor
+                )
+                if random.random() < 0.10:            # occasional returns
+                    gross -= random.uniform(50, 200)
+
+                marketplace = gross * 0.3 if random.random() < 0.30 else 0
+
+                rows.append(
+                    {
+                        "date": date,
+                        "state": state,
+                        "gross_sales": round(gross, 2),
+                        "transaction_count": int(txns),
+                        "marketplace_sales": round(marketplace, 2),
+                    }
+                )
+
+        df = pd.DataFrame(rows)
+
+        # ------------------------------------------------------------------
+        # Inject guaranteed-breach rows if requested
+        # ------------------------------------------------------------------
+        if force_breach:
+            thresholds = {
+                "CA": 500_000,
+                "TX": 500_000,
+                "NY": 500_000,
+                "FL": 100_000,
+                "WA": 100_000,
+                "IL": 100_000,
+                "PA": 100_000,
+                "OH": 100_000,
+            }
+            injection_date = pd.Timestamp(end_date) - pd.Timedelta(days=15)
+            burst_rows = [
+                {
+                    "date": injection_date,
+                    "state": state,
+                    "gross_sales": round(thresh * 1.25, 2),   # 25 % over
+                    "transaction_count": 300,
+                    "marketplace_sales": 0,
                 }
-                state_factor = state_factors.get(state, 1.0)
+                for state, thresh in thresholds.items()
+                if state in states
+            ]
+            df = pd.concat([df, pd.DataFrame(burst_rows)], ignore_index=True)
 
-# Generate daily metrics
-                base_transactions = np.random.poisson(5 * state_factor)
-                gross_sales = sum(
-                    np.random.lognormal(3.5, 1.2)
-                    for _ in range(base_transactions)
-                ) * seasonal_factor * state_factor
+        return df
 
-# Add some returns (negative sales)
-                if random.random() < 0.1:
-                    gross_sales -= random.uniform(50, 200)
 
-# Marketplace sales (30% of sellers on average)
-                marketplace_sales = gross_sales * 0.3 if random.random() < 0.3 else 0
-
-                data.append({
-                    'date': date,
-                    'state': state,
-                    'gross_sales': round(gross_sales, 2),
-                    'transaction_count': base_transactions,
-                    'marketplace_sales': round(marketplace_sales, 2)
-                })
-
-        return pd.DataFrame(data)
-
-# Add to your main script or tests:
+# ----------------------------------------------------------------------
+# CLI helper (optional)
+# ----------------------------------------------------------------------
 if __name__ == "__main__":
-    df = SampleDataGenerator.generate_realistic_data()
-    print(f"Generated {len(df)} rows of sample data")
-    print(df.head())
-    df.to_csv('sample_sales_data.csv', index=False)
+    df = SampleDataGenerator.generate_realistic_data(force_breach=True)
+    print(f"Generated {len(df)} rows of sample data (force_breach=True)")
+    df.to_csv("sample_sales_data.csv", index=False)
+    print("Saved → sample_sales_data.csv")
