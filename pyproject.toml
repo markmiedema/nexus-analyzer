@@ -1,19 +1,20 @@
 [tool.poetry]
 name = "nexus-analyzer"
 version = "0.1.0"
-description = "Sales-Tax nexus detection tool"
+description = "Sales tax nexus detection tool"
 authors = ["Mark Miedema <markmiedema.career@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-# homepage = "..."
-# repository = "..."
-# keywords = ["tax", "nexus", "cli"]
 
 [tool.poetry.dependencies]
-python = ">=3.13"
-typer = {version = ">=0.16.0,<0.17.0"} # Example if you add specific versioning
-pandas = {version = ">=2.2.3,<3.0.0"}
-# ... other dependencies ...
+python = "^3.10"  # Changed from >=3.13 to ^3.10 for better compatibility
+pandas = "^2.2.3"
+pydantic = "^2.11.5"
+pyyaml = "^6.0"
+openpyxl = "^3.1.5"
+click = "^8.1.7"  # Add missing dependency
+rich = "^13.7.0"   # Add missing dependency
+typer = {version = "^0.16.0", optional = true}  # Make optional if not using
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
